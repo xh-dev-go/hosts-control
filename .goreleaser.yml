@@ -1,0 +1,43 @@
+# .goreleaser.yml
+project_name: hosts control
+
+before:
+  hooks:
+    # Ensure dependencies are tidy before building
+    - go mod tidy
+
+builds:
+  - id: build release binary
+    # The main Go file to build
+    main: ./main.go
+    # The name of the output binary
+    binary: hosts-control
+    # Inject the version information using ldflags, just like you would manually.
+    # GoReleaser automatically provides the {{.Version}}, {{.Commit}}, and {{.Date}} variables.
+    ldflags:
+      - -s -w -X main.version={{.Version}}
+    goos:
+      - linux
+      - windows
+    goarch:
+      - amd64
+
+archives:
+  - format: binary
+# archives:
+#   - format: tar.gz
+#     # this name template makes the OS and Arch compatible with the results of `uname`.
+#     name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
+
+checksum:
+  name_template: 'checksums.txt'
+
+changelog:
+  sort: asc
+  filters:
+    # The changelog will only include commits with these prefixes.
+    # You can customize this to your commit message style.
+    include:
+      - '^feat: '
+      - '^fix: '
+      - '^refactor: '
