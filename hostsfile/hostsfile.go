@@ -1,4 +1,5 @@
-package interfaces
+package hostsfile
+
 
 import (
 	"encoding/json"

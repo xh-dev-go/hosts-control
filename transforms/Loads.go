@@ -4,7 +4,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/xh-dev-go/hosts-control/interfaces"
+	"github.com/xh-dev-go/hosts-control/hostsfile"
 	"github.com/xh-dev-go/hosts-control/iputils"
 )
 
@@ -17,16 +17,16 @@ func LoadFileToString(filePath string) (string, error) {
 	return string(content), nil
 }
 
-func LoadStringToHostsFile(content string) (*interfaces.HostsFile, error) {
-	hf := &interfaces.HostsFile{
-		Lines:    []interfaces.HostLine{},
-		ByIP:     make(map[string]*interfaces.HostLine),
-		ByDomain: make(map[string]*interfaces.HostLine),
+func LoadStringToHostsFile(content string) (*hostsfile.HostsFile, error) {
+	hf := &hostsfile.HostsFile{
+		Lines:    []hostsfile.HostLine{},
+		ByIP:     make(map[string]*hostsfile.HostLine),
+		ByDomain: make(map[string]*hostsfile.HostLine),
 	}
 
 	for _, rawLine := range strings.Split(content, "\n") {
 		line := strings.TrimSpace(rawLine)
-		entry := interfaces.HostLine{Raw: rawLine}
+		entry := hostsfile.HostLine{Raw: rawLine}
 
 		// Blank line
 		if line == "" {
@@ -83,7 +83,7 @@ func LoadStringToHostsFile(content string) (*interfaces.HostsFile, error) {
 }
 
 // SaveHostsFile writes the string representation of a HostsFile struct to a file.
-func SaveHostsFile(filePath string, hf *interfaces.HostsFile) error {
+func SaveHostsFile(filePath string, hf *hostsfile.HostsFile) error {
 	content := hf.ToHostsFileString()
 	return os.WriteFile(filePath, []byte(content), 0644)
 }
